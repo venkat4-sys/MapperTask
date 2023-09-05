@@ -1,15 +1,20 @@
 package com.getinfy.serviceimpl;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.getinfy.binding.UserBinding;
 import com.getinfy.entity.UserEntity;
 import com.getinfy.repo.UserRepo;
-import com.getinfy.service.Mapper;
+import com.getinfy.service.Maper;
 
 @Service
-public class MapperServiceImpl implements Mapper {
+public class MapperServiceImpl implements Maper {
+
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Autowired
 	private UserRepo repo;
@@ -17,32 +22,30 @@ public class MapperServiceImpl implements Mapper {
 	@Override
 	public boolean SaveUser(UserBinding binding) {
 
-		UserEntity e = new UserEntity();
-		e.setId(binding.getId());
-		e.setEmail(binding.getEmail());
-		e.setUserName(binding.getUserName());
+		UserEntity entity = new UserEntity();
 
-		repo.save(e);
+		BeanUtils.copyProperties(binding, entity);
+
+		repo.save(entity);
+
 		return true;
 	}
 
 	@Override
 	public UserBinding toUserBinding(UserEntity entity) {
-		UserBinding bind = new UserBinding();
-		bind.setId(entity.getId());
-		bind.setEmail(entity.getEmail());
-		bind.setUserName(entity.getUserName());
-
-		return bind;
+		UserBinding binding = new UserBinding();
+		modelMapper.map(entity, binding);
+        return binding;
 	}
 
 	@Override
 	public UserEntity toUserEntity(UserBinding binding) {
-		UserEntity e = new UserEntity();
-		e.setId(binding.getId());
-		e.setEmail(binding.getEmail());
-		e.setUserName(binding.getUserName());
-		return e;
+		UserEntity entity=new UserEntity();
+		
+		modelMapper.map(binding, entity);
+		
+		return entity;
+
 	}
 
 }

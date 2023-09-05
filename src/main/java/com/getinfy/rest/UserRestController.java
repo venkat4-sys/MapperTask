@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.getinfy.binding.UserBinding;
 import com.getinfy.entity.UserEntity;
-import com.getinfy.service.Mapper;
+import com.getinfy.serviceimpl.MapperServiceImpl;
 
 @RestController
 public class UserRestController {
 
 	@Autowired
-	private Mapper mapperService;
+	private MapperServiceImpl serviceimpl;
 
 	@PostMapping("/saveUser")
 	private ResponseEntity<String> saveUser(@RequestBody UserBinding binding) {
 
-		boolean saveUser = mapperService.SaveUser(binding);
+		boolean saveUser = serviceimpl.SaveUser(binding);
 
 		if (saveUser) {
 
@@ -35,7 +35,7 @@ public class UserRestController {
 	@GetMapping("/getUser")
 	private ResponseEntity<UserEntity> getentity(@RequestBody UserBinding binding) {
 
-		UserEntity userEntity = mapperService.toUserEntity(binding);
+		UserEntity userEntity = serviceimpl.toUserEntity(binding);
 
 		return new ResponseEntity<UserEntity>(userEntity, HttpStatus.OK);
 	}
@@ -43,7 +43,7 @@ public class UserRestController {
 	@GetMapping("/getBinding")
 	private ResponseEntity<UserBinding> getBinding(@RequestBody UserEntity entity) {
 
-		UserBinding userBinding = mapperService.toUserBinding(entity);
+		UserBinding userBinding = serviceimpl.toUserBinding(entity);
 
 		return new ResponseEntity<UserBinding>(userBinding, HttpStatus.OK);
 
