@@ -1,5 +1,7 @@
 package com.getinfy.serviceimpl;
 
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +25,8 @@ public class MapperServiceImpl implements Maper {
 	public boolean SaveUser(UserBinding binding) {
 
 		UserEntity entity = new UserEntity();
-
-		BeanUtils.copyProperties(binding, entity);
+		modelMapper.map(binding, entity);
+		
 
 		repo.save(entity);
 
@@ -46,6 +48,17 @@ public class MapperServiceImpl implements Maper {
 		
 		return entity;
 
+	}
+	
+	@Override
+	public UserEntity getUser(Integer id) {
+		Optional<UserEntity> findById = repo.findById(id);
+		
+		if(findById.isPresent()) {
+			return findById.get();
+			
+		}
+		return null;
 	}
 
 }
